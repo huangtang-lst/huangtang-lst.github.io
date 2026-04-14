@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Huang Tang — DS/ML/GenAI Engineer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #080c10;
+      --bg2: #0d1117;
+      --bg3: #111820;
+      --border: rgba(255,255,255,0.07);
+      --border-bright: rgba(255,255,255,0.14);
+      --accent: #00d4aa;
+      --accent2: #0088ff;
+      --text: #e8edf3;
+      --muted: #6b7a8d;
+      --muted2: #3d4a59;
+      --mono: 'IBM Plex Mono', monospace;
+      --sans: 'Syne', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 14px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* Grid overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,212,170,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,212,170,0.03) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2.5rem;
+      height: 60px;
+      background: rgba(8,12,16,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: var(--sans);
+      font-weight: 800;
+      font-size: 1.1rem;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .nav-logo span { color: var(--accent); }
+
+    nav ul {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    nav ul a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    nav ul a:hover { color: var(--accent); }
+
+    /* HERO */
+    #hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 0 2.5rem;
+      z-index: 1;
+    }
+
+    .hero-inner {
+      max-width: 900px;
+      width: 100%;
+    }
+
+    .hero-label {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .hero-label::before {
+      content: '';
+      display: inline-block;
+      width: 32px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    h1 {
+      font-family: var(--sans);
+      font-size: clamp(3rem, 8vw, 6.5rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 0.95;
+      margin-bottom: 1.5rem;
+      color: var(--text);
+    }
+
+    h1 .dim { color: var(--muted2); }
+
+    .hero-tagline {
+      font-size: 13px;
+      color: var(--muted);
+      max-width: 520px;
+      line-height: 1.8;
+      margin-bottom: 2.5rem;
+      border-left: 2px solid var(--accent);
+      padding-left: 1rem;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.65rem 1.4rem;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-decoration: none;
+      border-radius: 3px;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #000;
+      font-weight: 500;
+    }
+
+    .btn-primary:hover { background: #00f0c3; }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border-bright);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .hero-stats {
+      position: absolute;
+      right: 2.5rem;
+      bottom: 3rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      align-items: flex-end;
+    }
+
+    .stat-item {
+      text-align: right;
+    }
+
+    .stat-num {
+      font-family: var(--sans);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text);
+      display: block;
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* SECTIONS */
+    section {
+      position: relative;
+      z-index: 1;
+      padding: 6rem 2.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 3rem;
+    }
+
+    .section-num {
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+    }
+
+    .section-line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    h2 {
+      font-family: var(--sans);
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    /* ABOUT */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+
+    .about-text p {
+      color: var(--muted);
+      margin-bottom: 1rem;
+      line-height: 1.9;
+      font-size: 13px;
+    }
+
+    .about-text p strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .about-domains {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .domain-tag {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.6rem 1rem;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      font-size: 12px;
+      color: var(--muted);
+      transition: all 0.2s;
+    }
+
+    .domain-tag:hover {
+      border-color: var(--accent);
+      color: var(--text);
+    }
+
+    .domain-tag .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
+
+    /* EXPERIENCE */
+    .timeline {
+      position: relative;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: var(--border);
+    }
+
+    .exp-item {
+      padding: 0 0 2.5rem 2rem;
+      position: relative;
+    }
+
+    .exp-item::before {
+      content: '';
+      position: absolute;
+      left: -3px;
+      top: 6px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 3px rgba(0,212,170,0.15);
+    }
+
+    .exp-period {
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      margin-bottom: 0.3rem;
+    }
+
+    .exp-title {
+      font-family: var(--sans);
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.2rem;
+    }
+
+    .exp-company {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+    }
+
+    .exp-desc {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    /* SKILLS */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    .skill-group {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1.25rem;
+      transition: border-color 0.2s;
+    }
+
+    .skill-group:hover { border-color: var(--border-bright); }
+
+    .skill-group-title {
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    .skill-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .skill-tag {
+      font-size: 11px;
+      padding: 3px 8px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      color: var(--muted);
+    }
+
+    /* PROJECTS */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+
+    .project-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1.5rem;
+      text-decoration: none;
+      display: block;
+      transition: all 0.25s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+
+    .project-card:hover {
+      border-color: var(--border-bright);
+      transform: translateY(-2px);
+    }
+
+    .project-card:hover::after { opacity: 1; }
+
+    .project-domain {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+
+    .project-title {
+      font-family: var(--sans);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+
+    .project-desc {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+
+    .project-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+
+    .stack-tag {
+      font-size: 10px;
+      padding: 2px 7px;
+      background: rgba(0,212,170,0.08);
+      border: 1px solid rgba(0,212,170,0.2);
+      border-radius: 2px;
+      color: var(--accent);
+    }
+
+    /* BLOG */
+    .blog-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    .blog-item {
+      display: grid;
+      grid-template-columns: 140px 1fr auto;
+      align-items: baseline;
+      gap: 2rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .blog-item:hover .blog-title { color: var(--accent); }
+
+    .blog-date {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    .blog-title {
+      font-size: 13px;
+      color: var(--text);
+      transition: color 0.2s;
+    }
+
+    .blog-tag {
+      font-size: 10px;
+      padding: 2px 8px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    /* CONTACT */
+    .contact-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+
+    .contact-text {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.9;
+    }
+
+    .contact-text h3 {
+      font-family: var(--sans);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 1rem;
+    }
+
+    .links-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 2rem;
+    }
+
+    .contact-link {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 12px;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .contact-link:hover { color: var(--accent); }
+
+    .contact-link .link-label {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      width: 60px;
+      color: var(--muted2);
+      flex-shrink: 0;
+    }
+
+    /* FOOTER */
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 1.5rem 2.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: var(--muted2);
+    }
+
+    /* ANIMATIONS */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      nav ul { display: none; }
+      .about-grid, .skills-grid, .projects-grid, .contact-inner { grid-template-columns: 1fr; }
+      .hero-stats { display: none; }
+      .blog-item { grid-template-columns: 1fr; gap: 0.25rem; }
+      section { padding: 4rem 1.5rem; }
+      nav { padding: 0 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="#hero">HT<span>.</span></a>
+    <ul>
+      <li><a href="#about">About</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#blog">Blog</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero" style="max-width:100%; padding: 0 2.5rem; border-bottom: 1px solid var(--border);">
+    <div class="hero-inner">
+      <p class="hero-label">Available for consulting</p>
+      <h1>
+        Huang<br/>
+        <span class="dim">Tang</span>
+      </h1>
+      <p class="hero-tagline">
+        End-to-end DS/ML/GenAI product developer who brings innovative and practical solutions to realistic business challenges — from domain modeling to deployed systems.
+      </p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="#projects">View Projects</a>
+        <a class="btn btn-outline" href="#contact">Get In Touch</a>
+        <a class="btn btn-outline" href="resume.pdf" target="_blank">Resume ↗</a>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <span class="stat-num">8+</span>
+        <span class="stat-label">Years Experience</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">6</span>
+        <span class="stat-label">Domains</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">20+</span>
+        <span class="stat-label">Products Shipped</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="section-header fade-in">
+      <span class="section-num">01</span>
+      <h2>About</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="about-grid">
+      <div class="about-text fade-in">
+        <p>
+          I'm a <strong>full-stack data scientist and ML engineer</strong> with a systems-first mindset. My work begins with <strong>domain knowledge</strong> — understanding the actual physics, economics, or operational logic of a problem — and builds up through mathematical modeling to production-ready software.
+        </p>
+        <p>
+          I specialize in bridging the gap between <strong>research and deployment</strong>: turning rigorous mathematical models into scalable GenAI pipelines, decision systems, and ML products that solve real business problems.
+        </p>
+        <p>
+          Whether it's a clinical decision support tool, an aviation safety classifier, or a financial forecasting engine, I bring the same disciplined approach: <strong>first principles, then code</strong>.
+        </p>
+      </div>
+      <div class="about-domains fade-in">
+        <p style="font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--accent); margin-bottom:0.75rem;">Domain coverage</p>
+        <div class="domain-tag"><span class="dot"></span>Healthcare &amp; Clinical Decision Support</div>
+        <div class="domain-tag"><span class="dot"></span>Aviation Safety &amp; Operations</div>
+        <div class="domain-tag"><span class="dot"></span>Financial Modeling &amp; Risk</div>
+        <div class="domain-tag"><span class="dot"></span>Decision Intelligence</div>
+        <div class="domain-tag"><span class="dot"></span>Network Operations</div>
+        <div class="domain-tag"><span class="dot"></span>Enterprise GenAI Products</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience" style="border-top: 1px solid var(--border);">
+    <div class="section-header fade-in">
+      <span class="section-num">02</span>
+      <h2>Experience</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="timeline">
+      <div class="exp-item fade-in">
+        <div class="exp-period">2022 — Present</div>
+        <div class="exp-title">Senior DS/ML Engineer</div>
+        <div class="exp-company"><!-- Add your company --> [Company Name]</div>
+        <div class="exp-desc">Lead end-to-end development of GenAI products — from problem framing and mathematical modeling to production deployment. Designed multi-agent reasoning systems and RAG pipelines for enterprise clients across healthcare and finance.</div>
+      </div>
+      <div class="exp-item fade-in">
+        <div class="exp-period">2019 — 2022</div>
+        <div class="exp-title">Data Scientist</div>
+        <div class="exp-company"><!-- Add your company --> [Company Name]</div>
+        <div class="exp-desc">Built predictive models and decision-support tools across aviation safety and network operations domains. Architected scalable ML pipelines using Python and TypeScript, reducing model deployment cycles by 40%.</div>
+      </div>
+      <div class="exp-item fade-in">
+        <div class="exp-period">2016 — 2019</div>
+        <div class="exp-title">ML Engineer</div>
+        <div class="exp-company"><!-- Add your company --> [Company Name]</div>
+        <div class="exp-desc">Developed statistical models and NLP systems for business intelligence. Led cross-functional teams in translating domain expertise into quantitative solutions. Delivered 10+ production ML systems.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills" style="border-top: 1px solid var(--border);">
+    <div class="section-header fade-in">
+      <span class="section-num">03</span>
+      <h2>Skills</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-group fade-in">
+        <div class="skill-group-title">Languages</div>
+        <div class="skill-tags">
+          <span class="skill-tag">Python</span>
+          <span class="skill-tag">TypeScript</span>
+          <span class="skill-tag">SQL</span>
+          <span class="skill-tag">R</span>
+          <span class="skill-tag">Bash</span>
+        </div>
+      </div>
+      <div class="skill-group fade-in">
+        <div class="skill-group-title">ML / AI</div>
+        <div class="skill-tags">
+          <span class="skill-tag">PyTorch</span>
+          <span class="skill-tag">scikit-learn</span>
+          <span class="skill-tag">HuggingFace</span>
+          <span class="skill-tag">LangChain</span>
+          <span class="skill-tag">LlamaIndex</span>
+          <span class="skill-tag">Transformers</span>
+        </div>
+      </div>
+      <div class="skill-group fade-in">
+        <div class="skill-group-title">GenAI</div>
+        <div class="skill-tags">
+          <span class="skill-tag">RAG Systems</span>
+          <span class="skill-tag">Multi-agent</span>
+          <span class="skill-tag">Fine-tuning</span>
+          <span class="skill-tag">Prompt Eng.</span>
+          <span class="skill-tag">Evals</span>
+        </div>
+      </div>
+      <div class="skill-group fade-in">
+        <div class="skill-group-title">Data Engineering</div>
+        <div class="skill-tags">
+          <span class="skill-tag">Spark</span>
+          <span class="skill-tag">dbt</span>
+          <span class="skill-tag">Airflow</span>
+          <span class="skill-tag">Kafka</span>
+          <span class="skill-tag">PostgreSQL</span>
+          <span class="skill-tag">Redis</span>
+        </div>
+      </div>
+      <div class="skill-group fade-in">
+        <div class="skill-group-title">Cloud / MLOps</div>
+        <div class="skill-tags">
+          <span class="skill-tag">AWS</span>
+          <span class="skill-tag">GCP</span>
+          <span class="skill-tag">Docker</span>
+          <span class="skill-tag">Kubernetes</span>
+          <span class="skill-tag">MLflow</span>
+          <span class="skill-tag">FastAPI</span>
+        </div>
+      </div>
+      <div class="skill-group fade-in">
+        <div class="skill-group-title">Methods</div>
+        <div class="skill-tags">
+          <span class="skill-tag">Bayesian Inference</span>
+          <span class="skill-tag">Time Series</span>
+          <span class="skill-tag">Causal ML</span>
+          <span class="skill-tag">Optimization</span>
+          <span class="skill-tag">NLP</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects" style="border-top: 1px solid var(--border);">
+    <div class="section-header fade-in">
+      <span class="section-num">04</span>
+      <h2>Projects</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="projects-grid">
+      <a class="project-card fade-in" href="#" target="_blank">
+        <div class="project-domain">Healthcare</div>
+        <div class="project-title">Clinical Decision Support Engine</div>
+        <div class="project-desc">End-to-end RAG-powered diagnostic assistant that synthesizes patient records, clinical guidelines, and real-time lab data to surface evidence-based treatment recommendations.</div>
+        <div class="project-stack">
+          <span class="stack-tag">Python</span>
+          <span class="stack-tag">LlamaIndex</span>
+          <span class="stack-tag">GPT-4</span>
+          <span class="stack-tag">FastAPI</span>
+          <span class="stack-tag">PostgreSQL</span>
+        </div>
+      </a>
+      <a class="project-card fade-in" href="#" target="_blank">
+        <div class="project-domain">Aviation</div>
+        <div class="project-title">Flight Safety Anomaly Detector</div>
+        <div class="project-desc">Temporal convolutional network trained on FOQA data to identify precursor patterns of safety events up to 90 seconds before occurrence, enabling proactive crew alerts.</div>
+        <div class="project-stack">
+          <span class="stack-tag">PyTorch</span>
+          <span class="stack-tag">TCN</span>
+          <span class="stack-tag">Spark</span>
+          <span class="stack-tag">Airflow</span>
+          <span class="stack-tag">AWS</span>
+        </div>
+      </a>
+      <a class="project-card fade-in" href="#" target="_blank">
+        <div class="project-domain">Finance</div>
+        <div class="project-title">Probabilistic Risk Forecasting System</div>
+        <div class="project-desc">Bayesian hierarchical model for credit risk forecasting across portfolio segments, with uncertainty quantification and scenario simulation for regulatory stress testing.</div>
+        <div class="project-stack">
+          <span class="stack-tag">Python</span>
+          <span class="stack-tag">PyMC</span>
+          <span class="stack-tag">TypeScript</span>
+          <span class="stack-tag">React</span>
+          <span class="stack-tag">GCP</span>
+        </div>
+      </a>
+      <a class="project-card fade-in" href="#" target="_blank">
+        <div class="project-domain">GenAI</div>
+        <div class="project-title">Multi-agent Enterprise Copilot</div>
+        <div class="project-desc">Orchestrated multi-agent system with specialized sub-agents for data retrieval, code execution, and domain reasoning — deployed as an internal knowledge and productivity tool.</div>
+        <div class="project-stack">
+          <span class="stack-tag">LangGraph</span>
+          <span class="stack-tag">Claude</span>
+          <span class="stack-tag">TypeScript</span>
+          <span class="stack-tag">Next.js</span>
+          <span class="stack-tag">Redis</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- BLOG -->
+  <section id="blog" style="border-top: 1px solid var(--border);">
+    <div class="section-header fade-in">
+      <span class="section-num">05</span>
+      <h2>Blog</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="blog-list">
+      <a class="blog-item fade-in" href="#">
+        <span class="blog-date">2025-03-12</span>
+        <span class="blog-title">Designing RAG systems for clinical workflows: lessons from production</span>
+        <span class="blog-tag">GenAI</span>
+      </a>
+      <a class="blog-item fade-in" href="#">
+        <span class="blog-date">2025-01-28</span>
+        <span class="blog-title">Why causal graphs matter before you touch your data</span>
+        <span class="blog-tag">Methodology</span>
+      </a>
+      <a class="blog-item fade-in" href="#">
+        <span class="blog-date">2024-11-05</span>
+        <span class="blog-title">Uncertainty quantification in ML: from Bayesian posteriors to prediction intervals</span>
+        <span class="blog-tag">ML Theory</span>
+      </a>
+      <a class="blog-item fade-in" href="#">
+        <span class="blog-date">2024-09-17</span>
+        <span class="blog-title">Multi-agent orchestration patterns for enterprise GenAI</span>
+        <span class="blog-tag">Architecture</span>
+      </a>
+      <a class="blog-item fade-in" href="#">
+        <span class="blog-date">2024-07-02</span>
+        <span class="blog-title">Domain-first modeling: why I start with physics, not data</span>
+        <span class="blog-tag">Philosophy</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" style="border-top: 1px solid var(--border);">
+    <div class="section-header fade-in">
+      <span class="section-num">06</span>
+      <h2>Contact</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="contact-inner">
+      <div class="fade-in">
+        <div class="contact-text">
+          <h3>Let's build<br/>something rigorous.</h3>
+          <p style="margin-top:1rem;">
+            I'm open to consulting engagements, full-time roles, and research collaborations — especially in healthcare, aviation, finance, or any domain where the problem is genuinely hard.
+          </p>
+          <p style="margin-top:0.75rem; font-size:12px; color:var(--muted2);">
+            Preference for problems that start from first principles.
+          </p>
+        </div>
+      </div>
+      <div class="links-list fade-in">
+        <a class="contact-link" href="mailto:your@email.com">
+          <span class="link-label">Email</span>
+          your@email.com
+        </a>
+        <a class="contact-link" href="https://github.com/yourusername" target="_blank">
+          <span class="link-label">GitHub</span>
+          github.com/yourusername
+        </a>
+        <a class="contact-link" href="https://linkedin.com/in/yourusername" target="_blank">
+          <span class="link-label">LinkedIn</span>
+          linkedin.com/in/yourusername
+        </a>
+        <a class="contact-link" href="https://twitter.com/yourusername" target="_blank">
+          <span class="link-label">Twitter / X</span>
+          @yourusername
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span>Huang Tang — DS/ML/GenAI Engineer</span>
+    <span>Built with precision. No frameworks.</span>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.classList.add('visible'), i * 80);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', e => {
+        e.preventDefault();
+        document.querySelector(anchor.getAttribute('href'))?.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+  </script>
+</body>
+</html>
